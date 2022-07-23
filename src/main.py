@@ -63,62 +63,6 @@ class HttpHandler(socketserver.BaseRequestHandler):
             return None
         return request_arr[1]
 
-    @staticmethod
-    def create_base_http_response():
-        # https://stackoverflow.com/questions/225086/rfc-1123-date-representation-in-python
-        date = formatdate(timeval=None, localtime=False, usegmt=True)
-
-        HTTP_LINES = [
-            'HTTP/1.0 200 OK',
-            'Date: {}'.format(date),
-        ]
-
-        return HTTP_LINES
-
-    @staticmethod
-    def create_text_http_response(http_lines, html):
-        http_lines.append("Content-Type: text/html; charset=UTF-8")
-        response = bytes('\r\n'.join(http_lines) + '\r\n' * 2 + html, encoding='utf8')
-
-        return response
-
-    @staticmethod
-    def create_favicon_http_response(http_lines):
-        icon = open("favicon.ico", 'br')
-        favicon = icon.read()
-        http_lines.append("Content-Type: text/html; charset=UTF-8")
-
-        response = bytes('\r\n'.join(http_lines), encoding='utf8') + b'\r\n' * 2 + favicon
-        return response
-
-    @staticmethod
-    def create_file_http_response(http_lines, file_data):
-        date = formatdate(timeval=None, localtime=False, usegmt=True)
-        gzip_file = gzip.compress(file_data)
-        content_type = ['Content-Type: application/octet-stream', 'Content-Encoding: gzip',
-                        'Content-Length: {}'.format(len(gzip_file))]
-        http_lines = http_lines + content_type
-
-        response = bytes('\r\n'.join(http_lines), encoding='utf8') + b'\r\n' * 2 + gzip_file
-        return response
-
-    @staticmethod
-    def create_bad_request_http_response(path):
-        date = formatdate(timeval=None, localtime=False, usegmt=True)
-        http_lines = [
-            'HTTP/1.0 404 Not Found',
-            'Date: {}'.format(date),
-            'Content-Type: text/html; charset=UTF-8',
-        ]
-
-        with open("html_error_page.html", "r", encoding="UTF-8") as f:
-            html = f.read()
-
-        html = html.format(path)
-
-        response = bytes('\r\n'.join(http_lines) + '\r\n' * 2 + html, encoding='utf8')
-        return response
-
 
 def main():
     parser = argparse.ArgumentParser()
