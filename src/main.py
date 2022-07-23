@@ -1,8 +1,6 @@
 import socketserver
 import os
 import html_generator
-import gzip
-from email.utils import formatdate
 import argparse
 from urllib.parse import unquote
 import http_response
