@@ -18,6 +18,7 @@ def create_http_response(
     http_parameters = {
         'Date': '{}'.format(date),
         'Content-Type': content_type,
+        'Connection': 'close'  # We are unable to handle Keep-Alive connections
     }
 
     if content_encoding is not None:

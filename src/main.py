@@ -34,13 +34,14 @@ class HttpHandler(socketserver.BaseRequestHandler):
             # Request to download file
             else:
                 print('Download path', path)
-                file_data = open(path, "rb").read()
+                with open(path, "rb") as file:
+                    file_data = file.read()
                 response = http_response.create_file_http_response(file_data)
 
         except Exception as e:
             print(e)
             response = http_response.create_bad_request_http_response(path)
-
+        print('response length', len(response))
         self.request.sendall(response)
 
     def _readline(self):
